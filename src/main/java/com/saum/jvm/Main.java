@@ -1,5 +1,12 @@
 package com.saum.jvm;
 
+import com.saum.jvm.classpath.ClassPath;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
 /**
  * @Author saum
  * @Description:
@@ -19,6 +26,19 @@ public class Main {
     }
 
     private static void startJVM(Cmd cmd){
-        System.out.printf("classpath:%s class:%s args:%s\n", cmd.classpath, cmd.getMainClass(), cmd.getArgs());
+        ClassPath cp = new ClassPath(cmd.jre, cmd.classpath);
+        System.out.printf("classpath:%s class:%s args:%s\n", cp, cmd.getMainClass(), cmd.getArgs());
+        // 获取className
+        String className = cmd.getMainClass();
+        try {
+            byte[] classData = cp.readClass(className);
+            System.out.println("classData:");
+            for(byte b : classData){
+                //16进制输出
+                System.out.print(String.format("%02x", b & 0xff) + " ");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

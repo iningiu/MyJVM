@@ -14,11 +14,14 @@ public class Cmd {
     @Parameter(names = {"-?", "-help"}, description = "print help message", order = 3, help = true)
     boolean helpFlag = false;
 
-    @Parameter(names = "-version", description = "print the version", order = 1)
+    @Parameter(names = "-version", description = "print the version", order = 2)
     boolean versionFlag;
 
     @Parameter(names = {"-cp", "-classpath"}, description = "classpath", order = 1)
     String classpath;
+
+    @Parameter(names = "-Xjre", description = "path of jre", order = 4)
+    String jre;
 
     @Parameter(description = "main class and args")
     List<String> mainClassAndArgs;
