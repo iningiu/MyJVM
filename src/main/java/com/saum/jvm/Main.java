@@ -1,5 +1,6 @@
 package com.saum.jvm;
 
+import com.saum.jvm.classfile.ClassFile;
 import com.saum.jvm.classpath.ClassPath;
 
 import java.io.File;
@@ -26,19 +27,35 @@ public class Main {
     }
 
     private static void startJVM(Cmd cmd){
-        ClassPath cp = new ClassPath(cmd.jre, cmd.classpath);
-        System.out.printf("classpath:%s class:%s args:%s\n", cp, cmd.getMainClass(), cmd.getArgs());
+        ClassPath classPath = new ClassPath(cmd.jre, cmd.classpath);
+        System.out.printf("classpath:%s class:%s args:%s\n", classPath, cmd.getMainClass(), cmd.getArgs());
         // 获取className
         String className = cmd.getMainClass();
+
+        // 打印class文件内容
+//        try {
+//            byte[] classData = cp.readClass(className);
+//            System.out.println("classData:");
+//            for(byte b : classData){
+//                //16进制输出
+//                System.out.print(String.format("%02x", b & 0xff) + " ");
+//            }
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+
+        loadClass(className, classPath);
+
+    }
+
+    private static ClassFile loadClass(String className, ClassPath classPath){
         try {
-            byte[] classData = cp.readClass(className);
-            System.out.println("classData:");
-            for(byte b : classData){
-                //16进制输出
-                System.out.print(String.format("%02x", b & 0xff) + " ");
-            }
+            byte[] classData = classPath.readClass(className);
+            return new ClassFile(classData);
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("Could not find or load main class " + className);
+            return null;
         }
+
     }
 }

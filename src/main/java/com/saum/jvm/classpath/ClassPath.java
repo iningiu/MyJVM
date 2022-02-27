@@ -83,30 +83,5 @@ public class ClassPath {
         }
 
         return userClassPath.readClass(className);
-
-//        byte[] data;
-//        try {
-//            // 启动类路径
-//            data = boostrapClassPath.readClass(className);
-//            if(data != null){
-//                return data;
-//            }
-//
-//            // 扩展类路径
-//            data = extensionClassPath.readClass(className);
-//            if(data != null){
-//                return data;
-//            }
-//
-//            // 用户类路径
-//            data = userClassPath.readClass(className);
-//            if(data != null){
-//                return data;
-//            }
-//        } catch (IOException e) {
-////            e.printStackTrace();
-//        }
-
-//        throw new RuntimeException("can't find class!");
     }
 }
