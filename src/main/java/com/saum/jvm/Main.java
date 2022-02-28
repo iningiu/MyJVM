@@ -1,12 +1,14 @@
 package com.saum.jvm;
 
 import com.saum.jvm.classfile.ClassFile;
+import com.saum.jvm.classfile.MemberInfo;
 import com.saum.jvm.classpath.ClassPath;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
 
 /**
  * @Author saum
@@ -44,8 +46,8 @@ public class Main {
 //            e.printStackTrace();
 //        }
 
-        loadClass(className, classPath);
-
+        ClassFile classFile = loadClass(className, classPath);
+        printClassInfo(classFile);
     }
 
     private static ClassFile loadClass(String className, ClassPath classPath){
@@ -56,6 +58,23 @@ public class Main {
             System.out.println("Could not find or load main class " + className);
             return null;
         }
+    }
 
+    private static void printClassInfo(ClassFile cf){
+        System.out.println("version: " + cf.getMajorVersion() + "." + cf.getMinorVersion());
+        System.out.println("constants count：" + cf.getConstantPool().getConstantPoolCount());
+        System.out.format("access flags：0x%x\n", cf.getAccessFlags());
+        System.out.println("this class：" + cf.getClassName());
+        System.out.println("super class：" + cf.getSuperClassName());
+        System.out.println("interfaces：" + Arrays.toString(cf.getInterfaceNames()));
+        System.out.println("fields count：" + cf.getFields().length);
+        for (MemberInfo memberInfo : cf.getFields()) {
+            System.out.format("%s \t\t %s\n", memberInfo.getName(), memberInfo.getDesc());
+        }
+
+        System.out.println("methods count: " + cf.getMethods().length);
+        for (MemberInfo memberInfo : cf.getMethods()) {
+            System.out.format("%s \t\t %s\n", memberInfo.getName(), memberInfo.getDesc());
+        }
     }
 }

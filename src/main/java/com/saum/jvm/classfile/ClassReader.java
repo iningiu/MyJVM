@@ -30,6 +30,15 @@ public class ClassReader {
         return byte2int(res);
     }
 
+    public int[] readU2s(){
+        int n = readU2();
+        int[] arr = new int[n];
+        for(int i = 0; i < n; i++){
+            arr[i] = readU2(); // 指向常量池中的索引
+        }
+        return arr;
+    }
+
     // u4
     public int readU4ToInteger(){
         byte[] res = readBytes(4);

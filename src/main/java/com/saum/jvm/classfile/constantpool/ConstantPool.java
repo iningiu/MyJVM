@@ -1,10 +1,7 @@
 package com.saum.jvm.classfile.constantpool;
 
 import com.saum.jvm.classfile.ClassReader;
-import com.saum.jvm.classfile.constantpool.impl.ConstantClassInfo;
-import com.saum.jvm.classfile.constantpool.impl.ConstantDoubleInfo;
-import com.saum.jvm.classfile.constantpool.impl.ConstantNameAndTypeInfo;
-import com.saum.jvm.classfile.constantpool.impl.ConstantUtf8Info;
+import com.saum.jvm.classfile.constantpool.impl.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -29,7 +26,7 @@ public class ConstantPool {
         for(int i = 1; i < constantPoolCount; i++){
             constantInfos[i] = ConstantInfo.readConstantInfo(reader, this);
             // 因为double和long占8个字节
-            if(constantInfos[i] instanceof ConstantDoubleInfo){
+            if(constantInfos[i] instanceof ConstantDoubleInfo || constantInfos[i] instanceof ConstantLongInfo){
                 i++;
             }
         }
@@ -65,5 +62,9 @@ public class ConstantPool {
         map.put("name", getUTF8(constantNameAndTypeInfo.nameIndex));
         map.put("type", getUTF8(constantNameAndTypeInfo.descIndex));
         return map;
+    }
+
+    public int getConstantPoolCount() {
+        return constantPoolCount;
     }
 }

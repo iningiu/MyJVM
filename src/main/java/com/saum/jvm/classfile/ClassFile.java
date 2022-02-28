@@ -1,5 +1,6 @@
 package com.saum.jvm.classfile;
 
+import com.saum.jvm.classfile.attributes.AttributeInfo;
 import com.saum.jvm.classfile.constantpool.ConstantPool;
 
 /**
@@ -10,10 +11,17 @@ public class ClassFile {
     private int minorVersion; // 次版本号
     private int majorVersion;
     private ConstantPool constantPool;
-    private int accessFlags;
+    private int accessFlags; // 访问标志
+    /*
+    thisClass和superClass索引值指向常量池中一个类型为 CONSTANT_Class_info 的类描述符常量,
+    再通过 CONSTANT_Class_info类型的常量中的索引值,可以找到定义在CONSTANT_Utf8_info类型的常量中的全限定名字符串。
+     */
     private int thisClass;
     private int superClass;
-    private int[] interfaces;
+    private int[] interfaces; // 存放所实现的接口在常量池中的索引
+    private MemberInfo[] fields;
+    private MemberInfo[] methods;
+    private AttributeInfo[] attributes;
 
     /**
     * @Description
@@ -24,10 +32,17 @@ public class ClassFile {
         read(classReader);
     }
 
-    private void read(ClassReader classReader){
-        readAndCheckMagic(classReader);
-        readAndCheckVersion(classReader);
-        constantPool = readConstantPool(classReader);
+    private void read(ClassReader reader){
+        readAndCheckMagic(reader);
+        readAndCheckVersion(reader);
+        constantPool = readConstantPool(reader);
+        accessFlags = reader.readU2();
+        thisClass = reader.readU2();
+        superClass = reader.readU2();
+        interfaces = reader.readU2s();
+        fields = MemberInfo.readMembers(reader, constantPool);
+        methods = MemberInfo.readMembers(reader, constantPool);
+        attributes = AttributeInfo.readAttributes(reader, constantPool);
     }
 
     /**
@@ -60,4 +75,47 @@ public class ClassFile {
         return new ConstantPool(reader);
     }
 
+    public int getMinorVersion() {
+        return minorVersion;
+    }
+
+    public int getMajorVersion() {
+        return majorVersion;
+    }
+
+    public ConstantPool getConstantPool() {
+        return constantPool;
+    }
+
+    public int getAccessFlags() {
+        return accessFlags;
+    }
+
+    public MemberInfo[] getFields() {
+        return fields;
+    }
+
+    public MemberInfo[] getMethods() {
+        return methods;
+    }
+
+    public String getClassName() {
+        return constantPool.getClassName(thisClass);
+    }
+
+    public String getSuperClassName() {
+        // 除java.lang.Object外，所有Java类的父类索引都不为0
+        if (superClass < 0) {
+            return "";
+        }
+        return constantPool.getClassName(superClass);
+    }
+
+    public String[] getInterfaceNames(){
+        String[] interfaceNames = new String[interfaces.length];
+        for(int i = 0; i < interfaces.length; i++){
+            interfaceNames[i] = constantPool.getClassName(interfaces[i]);
+        }
+        return interfaceNames;
+    }
 }

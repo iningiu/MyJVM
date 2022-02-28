@@ -22,19 +22,18 @@ public class CompositeEntry extends Entry {
     }
 
     @Override
-    byte[] readClass(String className) throws IOException {
-        byte[] data;
+    public byte[] readClass(String className) throws IOException {
         for(Entry entry : entryList){
-            data = entry.readClass(className);
-            if(data != null){
-                return data;
+            try {
+                return entry.readClass(className);
+            } catch (IOException e) {
             }
         }
-        return null;
+        throw new IOException("class not found " + className);
     }
 
     @Override
-    String printClassName() {
+    public String printClassName() {
         String[] strs = new String[entryList.size()];
         for(int i = 0; i < entryList.size(); i++){
             strs[i] = entryList.get(i).printClassName();
