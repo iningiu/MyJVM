@@ -2,6 +2,9 @@ package com.saum.jvm;
 
 import com.saum.jvm.classfile.ClassFile;
 import com.saum.jvm.classfile.MemberInfo;
+import com.saum.jvm.classfile.rtda.Frame;
+import com.saum.jvm.classfile.rtda.LocalVars;
+import com.saum.jvm.classfile.rtda.OperandStack;
 import com.saum.jvm.classpath.ClassPath;
 
 import java.io.File;
@@ -47,7 +50,11 @@ public class Main {
 //        }
 
         ClassFile classFile = loadClass(className, classPath);
-        printClassInfo(classFile);
+//        printClassInfo(classFile);
+
+        Frame frame = new Frame(100, 100);
+        test_localVars(frame.localVars());
+        test_operandStack(frame.operandStack());
     }
 
     private static ClassFile loadClass(String className, ClassPath classPath){
@@ -76,5 +83,20 @@ public class Main {
         for (MemberInfo memberInfo : cf.getMethods()) {
             System.out.format("%s \t\t %s\n", memberInfo.getName(), memberInfo.getDesc());
         }
+    }
+
+    private static void test_localVars(LocalVars vars){
+        vars.setInt(0,100);
+        vars.setInt(1,-100);
+        System.out.println(vars.getInt(0));
+        System.out.println(vars.getInt(1));
+    }
+
+    private static void test_operandStack(OperandStack ops){
+        ops.pushInt(100);
+        ops.pushInt(-100);
+        ops.pushRef(null);
+        System.out.println(ops.popRef());
+        System.out.println(ops.popInt());
     }
 }
