@@ -2,15 +2,13 @@ package com.saum.jvm;
 
 import com.saum.jvm.classfile.ClassFile;
 import com.saum.jvm.classfile.MemberInfo;
-import com.saum.jvm.classfile.rtda.Frame;
-import com.saum.jvm.classfile.rtda.LocalVars;
-import com.saum.jvm.classfile.rtda.OperandStack;
+import com.saum.jvm.rtda.Frame;
+import com.saum.jvm.rtda.JvmThread;
+import com.saum.jvm.rtda.LocalVars;
+import com.saum.jvm.rtda.OperandStack;
 import com.saum.jvm.classpath.ClassPath;
 
-import java.io.File;
 import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Arrays;
 
 /**
@@ -52,7 +50,8 @@ public class Main {
         ClassFile classFile = loadClass(className, classPath);
 //        printClassInfo(classFile);
 
-        Frame frame = new Frame(100, 100);
+        JvmThread thread = new JvmThread();
+        Frame frame = new Frame(thread, 100, 100);
         test_localVars(frame.localVars());
         test_operandStack(frame.operandStack());
     }

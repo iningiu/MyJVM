@@ -1,6 +1,7 @@
 package com.saum.jvm.classfile;
 
 import com.saum.jvm.classfile.attributes.AttributeInfo;
+import com.saum.jvm.classfile.attributes.impl.CodeAttribute;
 import com.saum.jvm.classfile.constantpool.ConstantPool;
 
 /**
@@ -46,6 +47,15 @@ public class MemberInfo {
 
     public String getDesc(){
         return constantPool.getUTF8(descIndex);
+    }
+
+    public CodeAttribute getCodeAttribute(){
+        for(AttributeInfo info : attributeInfos){
+            if(info instanceof CodeAttribute){
+                return (CodeAttribute)info;
+            }
+        }
+        return null;
     }
 
 }

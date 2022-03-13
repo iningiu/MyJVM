@@ -12,31 +12,31 @@ import java.util.List;
 public class Cmd {
 
     @Parameter(names = {"-?", "-help"}, description = "print help message", order = 3, help = true)
-    boolean helpFlag = false;
+    public boolean helpFlag = false;
 
     @Parameter(names = "-version", description = "print the version", order = 2)
-    boolean versionFlag;
+    public boolean versionFlag;
 
     @Parameter(names = {"-cp", "-classpath"}, description = "classpath", order = 1)
-    String classpath;
+    public String classpath;
 
     @Parameter(names = "-Xjre", description = "path of jre", order = 4)
-    String jre;
+    public String jre;
 
     @Parameter(description = "main class and args")
-    List<String> mainClassAndArgs;
+    public List<String> mainClassAndArgs;
 
-    boolean ok;
+    public boolean ok;
 
-    String getMainClass(){
+    public String getMainClass(){
         return mainClassAndArgs != null && !mainClassAndArgs.isEmpty() ? mainClassAndArgs.get(0) : null;
     }
 
-    List<String> getArgs(){
+    public List<String> getArgs(){
         return mainClassAndArgs != null && mainClassAndArgs.size() > 1 ? mainClassAndArgs.subList(1, mainClassAndArgs.size()) : null;
     }
 
-    static Cmd parse(String[] argv){
+    public static Cmd parse(String[] argv){
         Cmd args = new Cmd();
         JCommander cmd = JCommander.newBuilder().addObject(args).build();
         cmd.parse(argv);
